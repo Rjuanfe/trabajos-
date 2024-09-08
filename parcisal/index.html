@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de Nómina</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f7;
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        header img {
+            width: 80px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #FF6F00; 
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #FF6F00; 
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #e65a00;
+        }
+        table {
+            width: 100%;
+            margin-top: 30px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+        }
+        th {
+            background-color: #FF6F00;
+            color: white;
+        }
+        #totalNomina {
+            font-weight: bold;
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="img\images.png" alt="Logo de la Universidad">
+            <h1>Cálculo de Nómina</h1>
+        </header>
+        <form id="nominaForm">
+            <div class="form-group">
+                <label>Nombre del Profesor</label>
+                <input type="text" id="nombre" required>
+            </div>
+            <div class="form-group">
+                <label>Horas Trabajadas</label>
+                <input type="number" id="horas" min="0" max="76" required>
+            </div>
+            <button type="button" onclick="calcularNomina()">Calcular Nómina</button>
+            <button type="button" onclick="borrarTabla()">Borrar Tabla</button>
+        </form>
+        <table id="resultadoNomina">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Horas Trabajadas</th>
+                    <th>Sueldo</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="totalNomina">Total a Pagar: $0</div>
+    </div>
+
+    <script>
+        const valorHora = 31000;
+        const maxHoras = 76;
+        let totalNomina = 0;
+
+        function calcularNomina() {
+            const nombre = document.getElementById('nombre').value.trim();
+            const horasTrabajadas = document.getElementById('horas').value.trim();
+
+            if (nombre === "" || horasTrabajadas === "") {
+                alert("Por favor, completa todos los campos antes de calcular la nómina.");
+                return;
+            }
+
+            const horas = parseFloat(horasTrabajadas);
+
+            if (horas > maxHoras) {
+                alert("Las horas trabajadas no pueden superar las 76 horas al mes.");
+                return;
+            }
+
+            const sueldo = horas * valorHora;
+            totalNomina += sueldo;
+
+            const resultadoNomina = document.getElementById('resultadoNomina').querySelector('tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${nombre}</td>
+                <td>${horas}</td>
+                <td>$${sueldo.toLocaleString()}</td>
+            `;
+            resultadoNomina.appendChild(row);
+
+            actualizarTotal();
+
+            
+            document.getElementById('nombre').value = '';
+            document.getElementById('horas').value = '';
+        }
+
+        function actualizarTotal() {
+            document.getElementById('totalNomina').textContent = `Total a Pagar: $${totalNomina.toLocaleString()}`;
+        }
+
+        function borrarTabla() {
+            const resultadoNomina = document.getElementById('resultadoNomina').querySelector('tbody');
+            resultadoNomina.innerHTML = '';
+            totalNomina = 0;
+            actualizarTotal();
+        }
+    </script>
+</body>
+</html>
